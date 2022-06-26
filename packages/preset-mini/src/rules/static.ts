@@ -1,5 +1,5 @@
 import type { Rule } from '@unocss/core'
-import { handler as h } from '../utils'
+import { handler as h, makeGlobalStaticRules } from '../utils'
 
 export const varEmpty = 'var(--un-empty,/*!*/ /*!*/)'
 
@@ -12,18 +12,20 @@ export const displays: Rule[] = [
   ['flow-root', { display: 'flow-root' }],
   ['list-item', { display: 'list-item' }],
   ['hidden', { display: 'none' }],
-  [/^display-(.+)$/, ([, c]) => ({ display: h.bracket.cssvar(c) || c })],
+  [/^display-(.+)$/, ([, c]) => ({ display: h.bracket.cssvar.global(c) || c })],
 ]
 
 export const appearances: Rule[] = [
   ['visible', { visibility: 'visible' }],
   ['invisible', { visibility: 'hidden' }],
+  ...makeGlobalStaticRules('visibility'),
   ['backface-visible', { 'backface-visibility': 'visible' }],
   ['backface-hidden', { 'backface-visibility': 'hidden' }],
+  ...makeGlobalStaticRules('backface', 'backface-visibility'),
 ]
 
 export const cursors: Rule[] = [
-  [/^cursor-(.+)$/, ([, c]) => ({ cursor: h.bracket.cssvar(c) || c })],
+  [/^cursor-(.+)$/, ([, c]) => ({ cursor: h.bracket.cssvar.global(c) || c })],
 ]
 
 export const pointerEvents: Rule[] = [

@@ -1,7 +1,7 @@
 import type { Rule } from '@unocss/core'
 import { toArray } from '@unocss/core'
 import type { Theme } from '../theme'
-import { colorResolver, colorableShadows, handler as h } from '../utils'
+import { colorResolver, colorableShadows, handler as h, makeGlobalStaticRules } from '../utils'
 
 const weightMap: Record<string, string> = {
   thin: '100',
@@ -43,7 +43,7 @@ export const fonts: Rule<Theme>[] = [
   ],
   [/^text-size-(.+)$/, ([, s], { theme }) => {
     const themed = toArray(theme.fontSize?.[s])
-    const size = themed?.[0] ?? h.bracket.cssvar.rem(s)
+    const size = themed?.[0] ?? h.bracket.cssvar.global.rem(s)
     if (size != null)
       return { 'font-size': size }
   }, { autocomplete: 'text-size-$fontSize' }],
@@ -63,11 +63,11 @@ export const fonts: Rule<Theme>[] = [
   ],
 
   // synthesis
-  [
-    /^font-synthesis-(.+)$/,
-    ([, s]) => ({ 'font-synthesis': s }),
-    { autocomplete: 'font-synthesis-(none|weight|style|small-caps)' },
-  ],
+  ['font-synthesis-weight', { 'font-synthesis': 'weight' }],
+  ['font-synthesis-style', { 'font-synthesis': 'style' }],
+  ['font-synthesis-small-caps', { 'font-synthesis': 'small-caps' }],
+  ...makeGlobalStaticRules('font-synthesis'),
+  ['font-synthesis-none', { 'font-synthesis': 'none' }],
 
   // tracking
   [
@@ -119,7 +119,7 @@ export const textShadows: Rule<Theme>[] = [
         'text-shadow': 'var(--un-text-shadow)',
       }
     }
-    return { 'text-shadow': h.bracket.cssvar(s) }
+    return { 'text-shadow': h.bracket.cssvar.global(s) }
   }, { autocomplete: 'text-shadow-$textShadow' }],
 
   // colors

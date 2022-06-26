@@ -1,5 +1,6 @@
 import type { Rule } from '@unocss/core'
 import { varEmpty } from '@unocss/preset-mini/rules'
+import { makeGlobalStaticRules } from '@unocss/preset-mini/utils'
 
 export const touchActionBase = {
   '--un-pan-x': varEmpty,
@@ -24,5 +25,6 @@ export const touchActions: Rule[] = [
 
   ['touch-auto', { 'touch-action': 'auto' }],
   ['touch-manipulation', { 'touch-action': 'manipulation' }],
+  ...makeGlobalStaticRules('touch', 'touch-action'),
   ['touch-none', { 'touch-action': 'none' }],
 ]
